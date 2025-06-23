@@ -1,12 +1,8 @@
-import dotenv from "dotenv";
 import express, { Application } from "express";
 import cors from "cors";
 import morgan from "morgan";
 import { env } from "./config/env";
 import routes from "./routes";
-
-// Load environment variables
-dotenv.config();
 
 const app: Application = express();
 
