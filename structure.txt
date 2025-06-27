@@ -1,0 +1,34 @@
+BACKEND-STRUCTURE
+	- Routes
+		- index.ts
+		- userRoute.ts
+	-Models
+		-UserModel.ts
+	-Middleware
+		- auth
+		- validator
+		- customMiddleware
+	-config
+		- db.ts
+		- env.ts
+		- email.ts
+		- websocket.ts
+	-modules
+		- User
+			- controller.ts
+			- services.ts
+			- messages.ts
+
+	- util
+		- responseUtil.ts
+	- types
+		- index.ts
+
+	- interfaces
+		- userInterface.ts
+
+	- shared
+		-
+
+	- cron
+		-index.ts
