@@ -1,7 +1,7 @@
 import express, { Application } from "express";
 import cors from "cors";
 import morgan from "morgan";
-import { env } from "./config/env";
+import { env } from "./config/envConfig";
 import routes from "./routes";
 import helmet from "helmet";
 import { limiterConfig } from "./config/rateLimitConfig";
