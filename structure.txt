@@ -15,9 +15,9 @@ BACKEND-STRUCTURE
 		- websocket.ts
 	-modules
 		- User
-			- controller.ts
-			- services.ts
-			- messages.ts
+			- userController.ts
+			- userServices.ts
+			- userMessages.ts
 
 	- util
 		- responseUtil.ts
@@ -28,7 +28,7 @@ BACKEND-STRUCTURE
 		- userInterface.ts
 
 	- shared
-		-
+		- 
 
 	- cron
 		-index.ts
