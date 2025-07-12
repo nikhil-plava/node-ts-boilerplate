@@ -1,9 +1,30 @@
 import app from "./app";
 import { env } from "./config/envConfig";
+import {
+  EServerStartMessages,
+  EUncaughtExceptionMessages,
+  EUnhandledRejectionMessages,
+} from "./messages";
 
-// Load environment variables from .env file
-const PORT = env.PORT || 5000;
+// Handle uncaught exceptions
+process.on(EUncaughtExceptionMessages.uncaughtException, (err) => {
+  console.error(
+    EUncaughtExceptionMessages.uncaughtExceptionMessage,
+    err.message
+  );
+  console.error(err.stack);
+  process.exit(1);
+});
 
-app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+const PORT = env.PORT;
+const server = app.listen(PORT, () => {
+  console.log(`${EServerStartMessages.serverRunning}${PORT}`);
+});
+
+// Handle unhandled promise rejections (async errors)
+process.on(EUnhandledRejectionMessages.unhandledRejection, (reason: any) => {
+  console.error(EUnhandledRejectionMessages.unhandledRejectionMessage, reason);
+  server.close(() => {
+    process.exit(1);
+  });
 });

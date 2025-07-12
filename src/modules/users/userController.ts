@@ -1,11 +1,52 @@
 import { Request, Response } from "express";
+import { TUser, TCreateUserBody, TUserLoginBody } from "../../types/userTypes";
+import * as userService from "./userService";
+import {
+  sendErrorResponse,
+  sendSuccessResponse,
+} from "../../utils/responseUtil";
+import { StatusCodes } from "http-status-codes";
+import messages from "./userMessage";
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const registerUser = async (req: Request, res: Response) => {
   try {
-    console.log("GET all users called");
-    res.json({ message: "Fetched all users (demo)" });
+    const body: TUser = req.body;
+    const createUserBody: TCreateUserBody = {
+      name: body.name,
+      email: body.email,
+      password: body.password,
+      role: body.role,
+      phone: body.phone,
+    };
+    const user = await userService.registerUser(createUserBody);
+    sendSuccessResponse(
+      StatusCodes.CREATED,
+      res,
+      user,
+      messages.CREATE_USER_SUCCESS
+    );
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    sendErrorResponse(StatusCodes.BAD_REQUEST, res, {}, errorMessage);
+  }
+};
+
+export const loginUser = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  try {
+    const createLoginBody: TUserLoginBody = {
+      email,
+      password,
+    };
+    const response = await userService.loginUser(createLoginBody);
+    sendSuccessResponse(
+      StatusCodes.CREATED,
+      res,
+      response,
+      `${response.role} ${messages.LOGIN_SUCCESS}`
+    );
   } catch (error) {
-    console.error("Error in getAllUsers:", error);
-    res.status(500).json({ error: "Internal server error" });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    sendErrorResponse(StatusCodes.UNAUTHORIZED, res, {}, errorMessage);
   }
 };
