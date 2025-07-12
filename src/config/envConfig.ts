@@ -12,4 +12,6 @@ function getEnvVar(key: string, fallback?: string): string {
 export const env = {
   PORT: getEnvVar("PORT", "5000"),
   BASIC_API_URL: getEnvVar("BASIC_API_URL", "/api/v1"),
+  DB_NAME: getEnvVar("DB_NAME", "testDB"),
+  DB_CONNECTION: getEnvVar("DB_CONNECTION", "mongodb://localhost:27017/"),
 };

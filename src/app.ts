@@ -5,6 +5,7 @@ import { env } from "./config/envConfig";
 import routes from "./routes";
 import helmet from "helmet";
 import { limiterConfig } from "./config/rateLimitConfig";
+import connectDB from "./config/dbConfig";
 // import { throttleConfig } from "./config/throttleConfig.cjs";
 
 const app: Application = express();
@@ -29,7 +30,10 @@ app.use(express.json());
 // Parse URL-encoded data with extended option
 app.use(express.urlencoded({ extended: true }));
 
-// Log HTTP requests in development mode
+// ===== Connect to DB =====
+connectDB();
+
+// ===== Log HTTP requests in development mode =====
 app.use(morgan("dev"));
 
 // ===== API Routes =====
