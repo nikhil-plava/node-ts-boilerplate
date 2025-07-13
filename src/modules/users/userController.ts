@@ -21,13 +21,14 @@ export const registerUser = async (req: Request, res: Response) => {
     const user = await userService.registerUser(createUserBody);
     sendSuccessResponse(
       StatusCodes.CREATED,
+      req,
       res,
       user,
       messages.CREATE_USER_SUCCESS
     );
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    sendErrorResponse(StatusCodes.BAD_REQUEST, res, {}, errorMessage);
+    sendErrorResponse(StatusCodes.BAD_REQUEST, req, res, {}, errorMessage);
   }
 };
 
@@ -41,12 +42,13 @@ export const loginUser = async (req: Request, res: Response) => {
     const response = await userService.loginUser(createLoginBody);
     sendSuccessResponse(
       StatusCodes.CREATED,
+      req,
       res,
       response,
       `${response.role} ${messages.LOGIN_SUCCESS}`
     );
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    sendErrorResponse(StatusCodes.UNAUTHORIZED, res, {}, errorMessage);
+    sendErrorResponse(StatusCodes.UNAUTHORIZED, req, res, {}, errorMessage);
   }
 };

@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, Request } from "express";
 import cors from "cors";
 import morgan from "morgan";
 import { env } from "./config/envConfig";
@@ -6,7 +6,13 @@ import routes from "./routes";
 import helmet from "helmet";
 // import { limiterConfig } from "./config/rateLimitConfig";
 import connectDB from "./config/dbConfig";
-import { globalErrorHandler } from "./middleware/error";
+import {
+  globalErrorHandler,
+  notFoundHandler,
+} from "./middleware/errorMiddleware";
+import { sendErrorResponse } from "./utils/responseUtil";
+import { StatusCodes } from "http-status-codes";
+import { requestIdMiddleware } from "./middleware/requestIdMiddleware";
 
 const app: Application = express();
 
@@ -17,15 +23,32 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 connectDB();
-app.use(morgan("dev"));
+
+// ===== Request ID Middleware =====
+app.use(requestIdMiddleware);
+
+// ===== Morgan Logging with Request ID =====
+
+morgan.token("id", (req: Request) => {
+  const requestId = req.headers["x-request-id"];
+  return typeof requestId === "string"
+    ? requestId
+    : Array.isArray(requestId)
+      ? requestId[0]
+      : "unknown";
+});
+
+app.use(
+  morgan(
+    "🧾 requestId=:id 🚀 :method :url 📦 status=:status ⏱️ :response-time ms"
+  )
+);
 
 // ===== API Routes =====
 app.use(env.BASIC_API_URL, routes);
 
-// ===== Health Check =====
-app.get("/", (req, res) => {
-  res.send("API is running");
-});
+// ===== Un handled Routes =====
+app.use(notFoundHandler);
 
 // ===== Global Error Handler =====
 app.use(globalErrorHandler);

@@ -18,7 +18,8 @@ process.on(EUncaughtExceptionMessages.uncaughtException, (err) => {
 
 const PORT = env.PORT;
 const server = app.listen(PORT, () => {
-  console.log(`${EServerStartMessages.serverRunning}${PORT}`);
+  console.info(`${EServerStartMessages.serverStarted}`);
+  console.log(`${EServerStartMessages.serverRunning}${PORT} ✅`);
 });
 
 // Handle unhandled promise rejections (async errors)
