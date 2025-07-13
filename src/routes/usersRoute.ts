@@ -1,15 +1,11 @@
 import { Router } from "express";
 import { registerUser, loginUser } from "../modules/users/userController";
 import { validate } from "../middleware/validatorMiddleware";
-import * as userValidator from "../validators/userValidators";
+import { loginValidator, registerValidator } from "../validators/index";
 
 const router = Router();
 
-router.post(
-  "/register",
-  validate(userValidator.registerValidator),
-  registerUser
-);
-router.post("/login", validate(userValidator.loginValidator), loginUser);
+router.post("/register", validate(registerValidator), registerUser);
+router.post("/login", validate(loginValidator), loginUser);
 
 export default router;

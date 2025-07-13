@@ -1,3 +1,5 @@
+// validators/userValidators.ts
+
 import { body } from "express-validator";
 
 export const registerValidator = [
@@ -8,9 +10,11 @@ export const registerValidator = [
     .withMessage("Name must be at least 2 characters"),
 
   body("email").isEmail().withMessage("A valid email is required"),
+
   body("password")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters"),
+
   body("role")
     .notEmpty()
     .withMessage("Role is required")
@@ -26,6 +30,7 @@ export const registerValidator = [
 
 export const loginValidator = [
   body("email").isEmail().withMessage("A valid email is required"),
+
   body("password")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters long"),
