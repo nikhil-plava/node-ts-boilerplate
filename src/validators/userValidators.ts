@@ -1,6 +1,5 @@
-// validators/userValidators.ts
-
 import { body } from "express-validator";
+import { validatorFn } from "../middleware/validatorMiddleware";
 
 export const registerValidator = [
   body("name")
@@ -26,6 +25,7 @@ export const registerValidator = [
     .withMessage("Phone number is required")
     .isMobilePhone("en-IN")
     .withMessage("Invalid phone number"),
+  validatorFn,
 ];
 
 export const loginValidator = [
@@ -34,4 +34,5 @@ export const loginValidator = [
   body("password")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters long"),
+  validatorFn,
 ];

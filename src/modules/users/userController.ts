@@ -1,12 +1,9 @@
-import { Request, Response } from "express";
-import { TUser, TCreateUserBody, TUserLoginBody } from "../../types/userTypes";
-import * as userService from "./userService";
-import {
-  sendErrorResponse,
-  sendSuccessResponse,
-} from "../../utils/responseUtil";
-import { StatusCodes } from "http-status-codes";
-import messages from "./userMessage";
+import { Request, Response } from 'express';
+import { TUser, TCreateUserBody, TUserLoginBody } from '../../types/userTypes';
+import * as userService from './userService';
+import { sendErrorResponse, sendSuccessResponse } from '../../utils/responseUtil';
+import { StatusCodes } from 'http-status-codes';
+import messages from './userMessage';
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
@@ -19,13 +16,7 @@ export const registerUser = async (req: Request, res: Response) => {
       phone: body.phone,
     };
     const user = await userService.registerUser(createUserBody);
-    sendSuccessResponse(
-      StatusCodes.CREATED,
-      req,
-      res,
-      user,
-      messages.CREATE_USER_SUCCESS
-    );
+    sendSuccessResponse(StatusCodes.CREATED, req, res, user, messages.CREATE_USER_SUCCESS);
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     sendErrorResponse(StatusCodes.BAD_REQUEST, req, res, {}, errorMessage);
@@ -40,13 +31,7 @@ export const loginUser = async (req: Request, res: Response) => {
       password,
     };
     const response = await userService.loginUser(createLoginBody);
-    sendSuccessResponse(
-      StatusCodes.CREATED,
-      req,
-      res,
-      response,
-      `${response.role} ${messages.LOGIN_SUCCESS}`
-    );
+    sendSuccessResponse(StatusCodes.CREATED, req, res, response, messages.LOGIN_SUCCESS);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     sendErrorResponse(StatusCodes.UNAUTHORIZED, req, res, {}, errorMessage);

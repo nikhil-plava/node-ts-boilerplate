@@ -1,21 +1,21 @@
-import { Request, Response, NextFunction } from "express";
-import { ContextRunner } from "express-validator";
-import { sendValidationErrorResponse } from "../utils/responseUtil";
-import { StatusCodes } from "http-status-codes";
+import { NextFunction, Request, Response } from "express";
+import { validationResult } from "express-validator";
+import { sendErrorResponse } from "../utils/responseUtil";
 
-export const validate = (validations: ContextRunner[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    for (const validation of validations) {
-      const result = await validation.run(req);
-      if (!result.isEmpty()) {
-        return sendValidationErrorResponse(
-          StatusCodes.BAD_REQUEST,
-          res,
-          result.array(),
-          "validation failed"
-        );
-      }
-    }
-    next();
-  };
+export const validatorFn = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): any => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return sendErrorResponse(
+      400,
+      req,
+      res,
+      "validation failed",
+      JSON.stringify(errors.array())
+    );
+  }
+  next();
 };
