@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { TCreateUserBody, TRoles, TUserLoginBody } from "../../types/userTypes";
 import userModel from "../../models/UserModel";
 import { generateJWT } from "../../utils/authFunction";
+import { TGetAllQueryParams } from "../../types";
 
 export const registerUser = async (createBody: TCreateUserBody) => {
   const { name, email, password, phone, role } = createBody;
@@ -43,4 +44,41 @@ export const loginUser = async (
     userId: user._id,
   };
   return response;
+};
+
+export const getAllUsers = async (
+  queryParams: TGetAllQueryParams
+): Promise<any> => {
+  const {
+    search = "",
+    sortBy = "createdAt",
+    sortOrder = "asc",
+    limit = "10",
+    offset = "0",
+  } = queryParams;
+
+  const parseLimit = limit ? parseInt(limit) : 10;
+  const parseOffset = offset ? parseInt(offset) : 0;
+
+  const matchStage: any = {};
+
+  if (search) {
+    matchStage.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } },
+      { phone: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  const sortStage: any = {};
+  sortStage[sortBy] = sortOrder === "asc" ? 1 : -1;
+
+  const users = await userModel.aggregate([
+    { $match: matchStage },
+    { $sort: sortStage },
+    { $skip: parseOffset },
+    { $limit: parseLimit },
+  ]);
+
+  return users;
 };
